@@ -72,7 +72,6 @@ func (r *Route53) query(method, path string, req, resp interface{}) error {
 		return err
 	}
 	endpoint.Path = path
-	sign(r.Auth, endpoint.Path, params)
 
 	// If they look like url.Values, just encode...
 	if queryArgs, ok := req.(url.Values); ok {
@@ -125,6 +124,8 @@ func (r *Route53) query(method, path string, req, resp interface{}) error {
 	if err != nil {
 		return err
 	}
+	//sign(r.Auth, hReq)
+	aws.SignV4(hReq, r.Auth)
 	for k, v := range params {
 		hReq.Header.Set(k, v)
 	}
